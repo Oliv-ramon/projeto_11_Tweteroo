@@ -1,21 +1,19 @@
 import express, { json } from "express";
 
-let user = {
-  username: "",
-  avatar: "",
-};
+const users = [];
 const tweets = [];
 
 const server = express();
 server.use(json());
 
 server.post("/sign-up", (req, res) => {
-  user = req.body;
+  users.push(req.body);
   res.send("OK");
 });
 
 server.post("/tweets", (req, res) => {
-  tweets.push({ ...req.body, avatar: user.avatar});
+  const currentUser = users.find((user)  => user.username === req.body.username);
+  tweets.push({ ...req.body, avatar: currentUser.avatar});
   res.send("OK");
 });
 
@@ -24,4 +22,4 @@ server.get("/tweets", (req, res) => {
   res.send(last10tweets);
 });
 
-server.listen(5000, console.log("Runing Api"))
+server.listen(5000, console.log("Runing Api"));
